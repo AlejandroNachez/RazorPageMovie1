@@ -19,11 +19,10 @@ namespace RazorPageMovie1.Pages.Movies
         {
             _context = context;
         }
-
         public IList<Movie> Movie { get;set; } = default!;
         [BindProperty(SupportsGet = true)]
         public string? SearchString { get; set; }
-        public string? Genres { get; set; }
+        public SelectList? Genres { get; set; }
         [BindProperty(SupportsGet = true)]
         public string? MovieGenre { get; set; }
 
@@ -32,6 +31,7 @@ namespace RazorPageMovie1.Pages.Movies
             IQueryable<string> genreQuery = from m in _context.Movie
                                             orderby m.Genre
                                             select m.Genre;
+
             //Movie = await _context.Movie.ToListAsync();
             var movies = from m in _context.Movie select m;
 
@@ -44,6 +44,7 @@ namespace RazorPageMovie1.Pages.Movies
             }           
 
             if (_context.Movie != null) {
+                Genres = new SelectList(await genreQuery.Distinct().ToListAsync());
                 Movie = await movies.ToListAsync();
             }
         }
